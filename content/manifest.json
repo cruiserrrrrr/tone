@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Tone Content Script",
+  "version": "1.0.0",
+  "description": "Basic script for Tone",
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://web.telegram.org/*"
+      ],
+      "js": [
+        "content-tone.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

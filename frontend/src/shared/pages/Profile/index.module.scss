@@ -1,0 +1,55 @@
+.profileContainer {
+    margin-top: 100px;
+    max-width: var(--app-max-width);
+}
+
+.layout {
+    display: flex;
+    gap: 32px;
+    min-height: 600px;
+}
+
+.sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.content {
+    flex-grow: 1;
+    background-color: var(--header-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    border-radius: 24px;
+    padding: 32px;
+}
+
+.tabsList {
+    border: none !important;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    &::before {
+        display: none;
+    }
+}
+
+.tab {
+    border-radius: 12px !important;
+    font-weight: 500;
+    padding: 12px 16px;
+    transition: background-color 0.2s ease;
+    color: var(--app-text);
+    border: 1px solid transparent !important;
+
+    &:hover {
+        background-color: rgba(128, 128, 128, 0.1);
+    }
+
+    &[data-active] {
+        background-color: var(--app-btn-bg) !important;
+        color: var(--app-btn-text) !important;
+        border-color: rgba(128, 128, 128, 0.2) !important;
+    }
+}

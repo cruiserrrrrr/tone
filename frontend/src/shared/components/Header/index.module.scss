@@ -1,0 +1,44 @@
+.header {
+    position: fixed;
+    top: 16px;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 0 16px;
+    pointer-events: none; // Чтобы можно было кликать сквозь отступы хедера
+
+    .container {
+        pointer-events: auto; // Возвращаем кликабельность самому хедеру
+        width: 100%;
+        max-width: var(--app-max-width);
+        height: 64px;
+        background-color: var(--header-bg);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        backdrop-filter: blur(12px);
+    }
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.dropdown {
+    padding: 6px;
+    border-radius: 20px;
+    z-index: 1001;
+
+    .item {
+        border-radius: 12px;
+    }
+}
