@@ -21,8 +21,16 @@ import {
     ArrowRight,
 } from "lucide-react";
 import styles from "./index.module.scss";
+import { useTranslation } from "react-i18next";
 
 const LandingPage = () => {
+    const { t } = useTranslation();
+
+    const problemItems = t("landing.problems.items", { returnObjects: true }) as string[];
+    const solutionItems = t("landing.solution.items", { returnObjects: true }) as string[];
+    const useCaseItems = t("landing.useCases.items", { returnObjects: true }) as string[];
+    const whoIsItForItems = t("landing.whoIsItFor.items", { returnObjects: true }) as string[];
+
     return (
         <Box className={styles.root}>
             {/* Hero Section */}
@@ -34,15 +42,14 @@ const LandingPage = () => {
                         className={styles.heroContent}
                     >
                         <Title className={styles.heroTitle}>
-                            The right tone. <br />
-                            <span className={styles.accent}>One click.</span>
+                            {t("landing.hero.title")} <br />
+                            <span className={styles.accent}>{t("landing.hero.subtitle")}</span>
                         </Title>
                         <Text
                             size="xl"
                             className={styles.heroSubtitle}
                         >
-                            Tone is a browser extension that helps you reply to clients in the right
-                            tone — instantly.
+                            {t("landing.hero.description")}
                         </Text>
                         <Group>
                             <Button
@@ -50,7 +57,7 @@ const LandingPage = () => {
                                 radius="md"
                                 className={styles.ctaButton}
                             >
-                                Install Chrome Extension
+                                {t("landing.hero.cta")}
                             </Button>
                             <Button
                                 size="xl"
@@ -58,7 +65,7 @@ const LandingPage = () => {
                                 variant="outline"
                                 color="gray"
                             >
-                                Join the waitlist
+                                {t("landing.hero.waitlist")}
                             </Button>
                         </Group>
 
@@ -73,14 +80,13 @@ const LandingPage = () => {
                             </div>
                             <div className={styles.browserContent}>
                                 <div className={styles.chatMessage}>
-                                    "I'm not sure about the price..."
+                                    {t("landing.mockup.chat")}
                                 </div>
                                 <div className={styles.generateButton}>
-                                    <Zap size={16} /> Generate
+                                    <Zap size={16} /> {t("landing.mockup.generate")}
                                 </div>
                                 <div className={styles.replyMessage}>
-                                    "I understand your concerns about the budget. Let's discuss how
-                                    we can align the value..."
+                                    {t("landing.mockup.reply")}
                                 </div>
                             </div>
                         </Box>
@@ -99,19 +105,14 @@ const LandingPage = () => {
                             order={2}
                             className={styles.sectionTitle}
                         >
-                            Client communication is exhausting.
+                            {t("landing.problems.title")}
                         </Title>
                         <SimpleGrid
                             cols={{ base: 1, sm: 2 }}
                             spacing="xl"
                             mt="xl"
                         >
-                            {[
-                                "Clients don’t know what they want",
-                                "You repeat the same answers",
-                                "You waste time and energy on messages",
-                                "The more they complain — the less they pay",
-                            ].map((text, i) => (
+                            {problemItems.map((text, i) => (
                                 <Group
                                     key={i}
                                     wrap="nowrap"
@@ -146,25 +147,19 @@ const LandingPage = () => {
                                 order={2}
                                 className={styles.sectionTitleLeft}
                             >
-                                Tone replies for you.
+                                {t("landing.solution.title")}
                             </Title>
                             <Text
                                 size="lg"
                                 c="dimmed"
                             >
-                                Tone reads the conversation, applies your rules and tone, and
-                                generates a ready-to-send reply — right inside the input.
+                                {t("landing.solution.description")}
                             </Text>
                             <Stack
                                 gap="sm"
                                 mt="md"
                             >
-                                {[
-                                    "One click",
-                                    "No copy-paste",
-                                    "No thinking",
-                                    "Your rules, your style",
-                                ].map((item, i) => (
+                                {solutionItems.map((item, i) => (
                                     <Group
                                         key={i}
                                         gap="sm"
@@ -181,17 +176,17 @@ const LandingPage = () => {
                         <Box className={styles.visualFlow}>
                             <div className={styles.flowStep}>
                                 <MessageSquare size={20} />
-                                <span>Incoming message</span>
+                                <span>{t("landing.solution.flow.incoming")}</span>
                             </div>
                             <ArrowRight className={styles.flowArrow} />
                             <div className={`${styles.flowStep} ${styles.active}`}>
                                 <MousePointerClick size={20} />
-                                <span>Click button</span>
+                                <span>{t("landing.solution.flow.click")}</span>
                             </div>
                             <ArrowRight className={styles.flowArrow} />
                             <div className={styles.flowStep}>
                                 <ShieldCheck size={20} />
-                                <span>Ready reply</span>
+                                <span>{t("landing.solution.flow.ready")}</span>
                             </div>
                         </Box>
                     </SimpleGrid>
@@ -207,17 +202,17 @@ const LandingPage = () => {
                         mb={50}
                         className={styles.sectionTitle}
                     >
-                        How Tone works
+                        {t("landing.howItWorks.title")}
                     </Title>
                     <SimpleGrid
                         cols={{ base: 1, sm: 2, md: 4 }}
                         spacing="xl"
                     >
                         {[
-                            { title: "Set your tone", icon: Settings },
-                            { title: "Read message", icon: MessageSquare },
-                            { title: "Click Generate", icon: Zap },
-                            { title: "Send", icon: Check },
+                            { title: t("landing.howItWorks.steps.set"), icon: Settings },
+                            { title: t("landing.howItWorks.steps.read"), icon: MessageSquare },
+                            { title: t("landing.howItWorks.steps.generate"), icon: Zap },
+                            { title: t("landing.howItWorks.steps.send"), icon: Check },
                         ].map((step, i) => (
                             <Stack
                                 key={i}
@@ -238,7 +233,7 @@ const LandingPage = () => {
                                     ta="center"
                                     c="dimmed"
                                 >
-                                    Step {i + 1}
+                                    {t("landing.howItWorks.steps.step", { index: i + 1 })}
                                 </Text>
                             </Stack>
                         ))}
@@ -255,18 +250,13 @@ const LandingPage = () => {
                         mb={50}
                         className={styles.sectionTitle}
                     >
-                        Built for real situations
+                        {t("landing.useCases.title")}
                     </Title>
                     <SimpleGrid
                         cols={{ base: 1, sm: 2 }}
                         spacing="lg"
                     >
-                        {[
-                            "Client says “I don’t like it”",
-                            "Client asks for a discount",
-                            "Client adds “just a small change”",
-                            "Client is aggressive",
-                        ].map((caseText, i) => (
+                        {useCaseItems.map((caseText, i) => (
                             <Card
                                 key={i}
                                 padding="lg"
@@ -283,7 +273,7 @@ const LandingPage = () => {
                         mt="xl"
                         c="dimmed"
                     >
-                        Tone keeps your replies calm, professional and consistent.
+                        {t("landing.useCases.footer")}
                     </Text>
                 </Container>
             </section>
@@ -297,19 +287,13 @@ const LandingPage = () => {
                         mb={50}
                         className={styles.sectionTitle}
                     >
-                        Who is Tone for?
+                        {t("landing.whoIsItFor.title")}
                     </Title>
                     <SimpleGrid
                         cols={{ base: 2, sm: 3, md: 5 }}
                         spacing="md"
                     >
-                        {[
-                            "Freelancers",
-                            "Solo founders",
-                            "Developers",
-                            "Consultants",
-                            "Support managers",
-                        ].map((user, i) => (
+                        {whoIsItForItems.map((user, i) => (
                             <Card
                                 key={i}
                                 padding="sm"
@@ -338,12 +322,12 @@ const LandingPage = () => {
                         gap="xl"
                         ta="center"
                     >
-                        <Title className={styles.sectionTitle}>Stop thinking about replies.</Title>
+                        <Title className={styles.sectionTitle}>{t("landing.footer.title")}</Title>
                         <Text
                             size="lg"
                             c="dimmed"
                         >
-                            Let Tone handle the tone.
+                            {t("landing.footer.subtitle")}
                         </Text>
                         <Group>
                             <Button
@@ -351,7 +335,7 @@ const LandingPage = () => {
                                 radius="md"
                                 className={styles.ctaButton}
                             >
-                                Install Extension
+                                {t("landing.footer.cta")}
                             </Button>
                             <Button
                                 size="xl"
@@ -359,7 +343,7 @@ const LandingPage = () => {
                                 variant="outline"
                                 color="gray"
                             >
-                                Join Waitlist
+                                {t("landing.footer.waitlist")}
                             </Button>
                         </Group>
                     </Stack>

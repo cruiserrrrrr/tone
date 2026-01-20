@@ -1,7 +1,14 @@
 import "@/styles/globals.scss";
 import "@mantine/core/styles.css";
+import i18n from "@/shared/i18n/config";
 import type { AppProps } from "next/app";
-import { MantineProvider, createTheme, MantineColorSchemeManager, ColorSchemeScript, Button } from "@mantine/core";
+import {
+    MantineProvider,
+    createTheme,
+    MantineColorSchemeManager,
+    ColorSchemeScript,
+    Button,
+} from "@mantine/core";
 import { Provider } from "react-redux";
 import { store } from "../shared/store";
 import { getCookie, setCookie } from "../shared/helpers/cookie";
@@ -41,14 +48,21 @@ const colorSchemeManager: MantineColorSchemeManager = {
     clear: () => {
         setCookie("mantine-color-scheme", "");
     },
-    unsubscribe: () => {
-    },
+    unsubscribe: () => {},
 };
 
-export default function App({Component, pageProps}: AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
+    if (pageProps.lng && i18n.language !== pageProps.lng) {
+        i18n.changeLanguage(pageProps.lng);
+    }
+
     return (
         <Provider store={store}>
-            <MantineProvider theme={theme} colorSchemeManager={colorSchemeManager} defaultColorScheme="dark">
+            <MantineProvider
+                theme={theme}
+                colorSchemeManager={colorSchemeManager}
+                defaultColorScheme="dark"
+            >
                 <Component {...pageProps} />
             </MantineProvider>
         </Provider>

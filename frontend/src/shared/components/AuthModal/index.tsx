@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { Modal, Button, TextInput, PasswordInput, Stack, Title, Text, Group, Box } from "@mantine/core";
+import {
+    Modal,
+    Button,
+    TextInput,
+    PasswordInput,
+    Stack,
+    Title,
+    Text,
+    Group,
+    Box,
+} from "@mantine/core";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { loginThunk, registerThunk } from "../../../entities/user/userSlice/thunks";
@@ -10,24 +20,24 @@ interface AuthModalProps {
     onClose: () => void;
 }
 
-export const Index = ({opened, onClose}: AuthModalProps) => {
+const AuthModal = ({ opened, onClose }: AuthModalProps) => {
     const [type, setType] = useState<"login" | "register">("login");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
 
     const dispatch = useDispatch<AppDispatch>();
-    const {loading, error} = useSelector((state: RootState) => state.user);
+    const { loading, error } = useSelector((state: RootState) => state.user);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (type === "login") {
-            const result = await dispatch(loginThunk({email, password}));
+            const result = await dispatch(loginThunk({ email, password }));
             if (loginThunk.fulfilled.match(result)) {
                 onClose();
             }
         } else {
-            const result = await dispatch(registerThunk({email, password, name}));
+            const result = await dispatch(registerThunk({ email, password, name }));
             if (registerThunk.fulfilled.match(result)) {
                 onClose();
             }
@@ -35,7 +45,7 @@ export const Index = ({opened, onClose}: AuthModalProps) => {
     };
 
     const toggleType = () => {
-        setType(prev => prev === "login" ? "register" : "login");
+        setType((prev) => (prev === "login" ? "register" : "login"));
         dispatch(clearError());
     };
 
@@ -77,12 +87,19 @@ export const Index = ({opened, onClose}: AuthModalProps) => {
                     />
 
                     {error && (
-                        <Text color="red" size="sm">
+                        <Text
+                            color="red"
+                            size="sm"
+                        >
                             {error}
                         </Text>
                     )}
 
-                    <Button type="submit" loading={loading} fullWidth>
+                    <Button
+                        type="submit"
+                        loading={loading}
+                        fullWidth
+                    >
                         {type === "login" ? "Войти" : "Зарегистрироваться"}
                     </Button>
 
@@ -90,7 +107,11 @@ export const Index = ({opened, onClose}: AuthModalProps) => {
                         <Text size="sm">
                             {type === "login" ? "Нет аккаунта?" : "Уже есть аккаунт?"}
                         </Text>
-                        <Button variant="transparent" size="sm" onClick={toggleType}>
+                        <Button
+                            variant="transparent"
+                            size="sm"
+                            onClick={toggleType}
+                        >
                             {type === "login" ? "Регистрация" : "Вход"}
                         </Button>
                     </Group>
@@ -99,3 +120,5 @@ export const Index = ({opened, onClose}: AuthModalProps) => {
         </Modal>
     );
 };
+
+export default AuthModal;

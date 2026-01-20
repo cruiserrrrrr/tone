@@ -16,14 +16,14 @@
         max-width: var(--app-max-width);
         height: 64px;
         background-color: var(--header-bg);
-        -webkit-backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(6px);
         border-radius: 24px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 0 24px;
         border: 1px solid rgba(128, 128, 128, 0.2);
-        backdrop-filter: blur(12px);
+        backdrop-filter: blur(6px);
     }
 }
 
@@ -33,12 +33,34 @@
     text-decoration: none;
 }
 
+.selectInput {
+    background-color: var(--app-btn-bg) !important;
+    color: var(--app-btn-text) !important;
+    border: none !important;
+    font-weight: bold !important;
+}
+
+.section {
+    color: var(--app-btn-text) !important;
+}
+
 .dropdown {
+    background-color: var(--app-btn-bg) !important;
+    border: 1px solid rgba(128, 128, 128, 0.2) !important;
     padding: 6px;
     border-radius: 20px;
     z-index: 1001;
 
     .item {
+        color: var(--app-btn-text) !important;
         border-radius: 12px;
+        transition: background-color 0.2s ease;
+
+        &[data-selected],
+        &[data-combobox-selected],
+        &:hover {
+            background-color: var(--header-bg) !important;
+            color: var(--app-text) !important;
+        }
     }
 }

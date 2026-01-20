@@ -1,0 +1,81 @@
+{
+  "header": {
+    "login": "Login",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "landing": {
+    "hero": {
+      "title": "The right tone.",
+      "subtitle": "One click.",
+      "description": "Tone is a browser extension that helps you reply to clients in the right tone — instantly.",
+      "cta": "Install Chrome Extension",
+      "waitlist": "Join the waitlist"
+    },
+    "mockup": {
+      "chat": "\"I'm not sure about the price...\"",
+      "generate": "Generate",
+      "reply": "\"I understand your concerns about the budget. Let's discuss how we can align the value...\""
+    },
+    "problems": {
+      "title": "Client communication is exhausting.",
+      "items": [
+        "Clients don’t know what they want",
+        "You repeat the same answers",
+        "You waste time and energy on messages",
+        "The more they complain — the less they pay"
+      ]
+    },
+    "solution": {
+      "title": "Tone replies for you.",
+      "description": "Tone reads the conversation, applies your rules and tone, and generates a ready-to-send reply — right inside the input.",
+      "items": [
+        "One click",
+        "No copy-paste",
+        "No thinking",
+        "Your rules, your style"
+      ],
+      "flow": {
+        "incoming": "Incoming message",
+        "click": "Click button",
+        "ready": "Ready reply"
+      }
+    },
+    "howItWorks": {
+      "title": "How Tone works",
+      "steps": {
+        "set": "Set your tone",
+        "read": "Read message",
+        "generate": "Click Generate",
+        "send": "Send",
+        "step": "Step {{index}}"
+      }
+    },
+    "useCases": {
+      "title": "Built for real situations",
+      "items": [
+        "Client says “I don’t like it”",
+        "Client asks for a discount",
+        "Client adds “just a small change”",
+        "Client is aggressive"
+      ],
+      "footer": "Tone keeps your replies calm, professional and consistent."
+    },
+    "whoIsItFor": {
+      "title": "Who is Tone for?",
+      "items": [
+        "Freelancers",
+        "Solo founders",
+        "Developers",
+        "Consultants",
+        "Support managers"
+      ]
+    },
+    "footer": {
+      "title": "Stop thinking about replies.",
+      "subtitle": "Let Tone handle the tone.",
+      "cta": "Install Extension",
+      "waitlist": "Join Waitlist"
+    }
+  }
+}

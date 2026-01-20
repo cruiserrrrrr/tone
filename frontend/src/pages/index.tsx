@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Header from "@/shared/components/Header";
 import LandingPage from "@/pages/LandingPage";
+import { GetServerSideProps } from "next";
 
 export default function Home() {
     return (
@@ -26,3 +27,12 @@ export default function Home() {
         </>
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const lng = context.req.cookies.i18next || "ru";
+    return {
+        props: {
+            lng,
+        },
+    };
+};
