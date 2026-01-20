@@ -13,8 +13,11 @@
 [data-mantine-color-scheme="dark"] {
     --app-bg: #000000;
     --app-text: #ffffff;
-    --app-btn-bg: #ffffff;
-    --app-btn-text: #000000;
+    --app-btn-bg: #0f0f0f;
+    --app-btn-text: #ffffff;
+    --app-bg-secondary: #1a1a1a;
+    --app-border: #333333;
+    --app-text-dimmed: #888888;
     --header-bg: rgba(0, 0, 0, 0.4);
 }
 
@@ -25,8 +28,8 @@ body {
 }
 
 body {
-    color: var(--app-text);
-    background: var(--app-bg);
+    color: var(--app-text) !important;
+    background-color: var(--app-bg) !important;
     font-family: Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
