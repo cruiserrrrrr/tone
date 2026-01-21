@@ -71,6 +71,72 @@
         "Support managers"
       ]
     },
+    "pricing": {
+      "title": "Choose your tone",
+      "subtitle": "Start free. Upgrade when Tone becomes essential.",
+      "cards": {
+        "free": {
+          "title": "FREE — Trial",
+          "description": "For trying Tone without commitment",
+          "price": "Free",
+          "period": "(1 day trial)",
+          "features": [
+            "Valid for 24 hours",
+            "10 replies total",
+            "All basic tones",
+            "No custom instructions"
+          ],
+          "cta": "Try Tone for free"
+        },
+        "basic": {
+          "title": "BASIC",
+          "description": "For daily messages and casual use",
+          "price": "$9",
+          "period": "/ month",
+          "features": [
+            "~300 replies / month",
+            "Fast replies",
+            "All standard tones",
+            "No custom instructions"
+          ],
+          "cta": "Start Basic"
+        },
+        "pro": {
+          "title": "PRO",
+          "badge": "Most popular",
+          "description": "For work, sales and important conversations",
+          "price": "$15",
+          "period": "/ month",
+          "features": [
+            "~800 replies / month",
+            "Priority processing",
+            "All tones + expanded",
+            "Custom instructions",
+            "Improved context"
+          ],
+          "cta": "Go Pro"
+        },
+        "business": {
+          "title": "BUSINESS",
+          "description": "For power users and professionals",
+          "price": "$35",
+          "period": "/ month",
+          "features": [
+            "~2500 replies / month",
+            "Maximum speed",
+            "All tones without limits",
+            "Advanced custom instructions",
+            "Long context",
+            "Priority in queue"
+          ],
+          "cta": "Upgrade to Business"
+        }
+      },
+      "footer": {
+        "noCard": "No credit card required for trial",
+        "cancel": "Cancel anytime"
+      }
+    },
     "footer": {
       "title": "Stop thinking about replies.",
       "subtitle": "Let Tone handle the tone.",

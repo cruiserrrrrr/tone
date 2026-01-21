@@ -19,12 +19,21 @@ import {
     Zap,
     ShieldCheck,
     ArrowRight,
+    X,
 } from "lucide-react";
 import styles from "./index.module.scss";
 import { useTranslation } from "react-i18next";
+import { useIntersection } from "@mantine/hooks";
 
 const LandingPage = () => {
     const { t } = useTranslation();
+
+    const { ref: pricingRef, entry: pricingEntry } = useIntersection({
+        threshold: 0.1,
+        root: null,
+    });
+
+    const isPricingVisible = pricingEntry?.isIntersecting;
 
     const problemItems = t("landing.problems.items", { returnObjects: true }) as string[];
     const solutionItems = t("landing.solution.items", { returnObjects: true }) as string[];
@@ -79,9 +88,7 @@ const LandingPage = () => {
                                 </div>
                             </div>
                             <div className={styles.browserContent}>
-                                <div className={styles.chatMessage}>
-                                    {t("landing.mockup.chat")}
-                                </div>
+                                <div className={styles.chatMessage}>{t("landing.mockup.chat")}</div>
                                 <div className={styles.generateButton}>
                                     <Zap size={16} /> {t("landing.mockup.generate")}
                                 </div>
@@ -131,6 +138,358 @@ const LandingPage = () => {
                             ))}
                         </SimpleGrid>
                     </Stack>
+                </Container>
+            </section>
+
+            {/* Pricing Section */}
+            <section
+                className={styles.section}
+                ref={pricingRef}
+            >
+                <Container size="lg">
+                    <Stack
+                        align="center"
+                        gap="xs"
+                        mb={50}
+                    >
+                        <Title
+                            order={2}
+                            className={styles.sectionTitle}
+                        >
+                            {t("landing.pricing.title")}
+                        </Title>
+                        <Text
+                            size="lg"
+                            c="dimmed"
+                        >
+                            {t("landing.pricing.subtitle")}
+                        </Text>
+                    </Stack>
+
+                    <SimpleGrid
+                        cols={{ base: 1, sm: 2, lg: 4 }}
+                        spacing="xl"
+                    >
+                        {/* FREE */}
+                        <Card
+                            className={`${styles.pricingCard} ${isPricingVisible ? styles.staggered : ""}`}
+                            style={{ animationDelay: "0.1s", opacity: isPricingVisible ? 1 : 0 }}
+                            padding="xl"
+                            radius="md"
+                            withBorder
+                        >
+                            <Stack
+                                justify="space-between"
+                                h="100%"
+                            >
+                                <Stack gap="md">
+                                    <Text
+                                        fw={700}
+                                        size="xl"
+                                    >
+                                        {t("landing.pricing.cards.free.title")}
+                                    </Text>
+                                    <Text
+                                        size="sm"
+                                        c="dimmed"
+                                    >
+                                        {t("landing.pricing.cards.free.description")}
+                                    </Text>
+                                    <Group
+                                        align="flex-end"
+                                        gap={4}
+                                        mt="md"
+                                    >
+                                        <Text className={styles.priceTitle}>
+                                            {t("landing.pricing.cards.free.price")}
+                                        </Text>
+                                        <Text className={styles.pricePeriod}>
+                                            {t("landing.pricing.cards.free.period")}
+                                        </Text>
+                                    </Group>
+                                    <Stack
+                                        gap="xs"
+                                        mt="md"
+                                    >
+                                        {(
+                                            t("landing.pricing.cards.free.features", {
+                                                returnObjects: true,
+                                            }) as string[]
+                                        ).map((feature, i) => (
+                                            <Group
+                                                key={i}
+                                                gap="sm"
+                                                wrap="nowrap"
+                                            >
+                                                {feature.startsWith("Без") ||
+                                                feature.startsWith("No") ? (
+                                                    <X
+                                                        size={16}
+                                                        color="gray"
+                                                    />
+                                                ) : (
+                                                    <Check
+                                                        size={16}
+                                                        className={styles.accent}
+                                                    />
+                                                )}
+                                                <Text size="sm">{feature}</Text>
+                                            </Group>
+                                        ))}
+                                    </Stack>
+                                </Stack>
+                                <Button
+                                    fullWidth
+                                    radius="md"
+                                    variant="outline"
+                                    mt="xl"
+                                >
+                                    {t("landing.pricing.cards.free.cta")}
+                                </Button>
+                            </Stack>
+                        </Card>
+
+                        {/* BASIC */}
+                        <Card
+                            className={`${styles.pricingCard} ${isPricingVisible ? styles.staggered : ""}`}
+                            style={{ animationDelay: "0.2s", opacity: isPricingVisible ? 1 : 0 }}
+                            padding="xl"
+                            radius="md"
+                            withBorder
+                        >
+                            <Stack
+                                justify="space-between"
+                                h="100%"
+                            >
+                                <Stack gap="md">
+                                    <Text
+                                        fw={700}
+                                        size="xl"
+                                    >
+                                        {t("landing.pricing.cards.basic.title")}
+                                    </Text>
+                                    <Text
+                                        size="sm"
+                                        c="dimmed"
+                                    >
+                                        {t("landing.pricing.cards.basic.description")}
+                                    </Text>
+                                    <Group
+                                        align="flex-end"
+                                        gap={4}
+                                        mt="md"
+                                    >
+                                        <Text className={styles.priceTitle}>
+                                            {t("landing.pricing.cards.basic.price")}
+                                        </Text>
+                                        <Text className={styles.pricePeriod}>
+                                            {t("landing.pricing.cards.basic.period")}
+                                        </Text>
+                                    </Group>
+                                    <Stack
+                                        gap="xs"
+                                        mt="md"
+                                    >
+                                        {(
+                                            t("landing.pricing.cards.basic.features", {
+                                                returnObjects: true,
+                                            }) as string[]
+                                        ).map((feature, i) => (
+                                            <Group
+                                                key={i}
+                                                gap="sm"
+                                                wrap="nowrap"
+                                            >
+                                                {feature.startsWith("Без") ||
+                                                feature.startsWith("No") ? (
+                                                    <X
+                                                        size={16}
+                                                        color="gray"
+                                                    />
+                                                ) : (
+                                                    <Check
+                                                        size={16}
+                                                        className={styles.accent}
+                                                    />
+                                                )}
+                                                <Text size="sm">{feature}</Text>
+                                            </Group>
+                                        ))}
+                                    </Stack>
+                                </Stack>
+                                <Button
+                                    fullWidth
+                                    radius="md"
+                                    variant="outline"
+                                    mt="xl"
+                                >
+                                    {t("landing.pricing.cards.basic.cta")}
+                                </Button>
+                            </Stack>
+                        </Card>
+
+                        {/* PRO */}
+                        <Card
+                            className={`${styles.pricingCard} ${styles.recommended} ${
+                                isPricingVisible ? styles.staggered : ""
+                            }`}
+                            style={{ animationDelay: "0.3s", opacity: isPricingVisible ? 1 : 0 }}
+                            padding="xl"
+                            radius="md"
+                            withBorder
+                        >
+                            <Box className={styles.pricingBadge}>
+                                {t("landing.pricing.cards.pro.badge")}
+                            </Box>
+                            <Stack
+                                justify="space-between"
+                                h="100%"
+                            >
+                                <Stack gap="md">
+                                    <Text
+                                        fw={700}
+                                        size="xl"
+                                    >
+                                        {t("landing.pricing.cards.pro.title")}
+                                    </Text>
+                                    <Text
+                                        size="sm"
+                                        c="dimmed"
+                                    >
+                                        {t("landing.pricing.cards.pro.description")}
+                                    </Text>
+                                    <Group
+                                        align="flex-end"
+                                        gap={4}
+                                        mt="md"
+                                    >
+                                        <Text className={styles.priceTitle}>
+                                            {t("landing.pricing.cards.pro.price")}
+                                        </Text>
+                                        <Text className={styles.pricePeriod}>
+                                            {t("landing.pricing.cards.pro.period")}
+                                        </Text>
+                                    </Group>
+                                    <Stack
+                                        gap="xs"
+                                        mt="md"
+                                    >
+                                        {(
+                                            t("landing.pricing.cards.pro.features", {
+                                                returnObjects: true,
+                                            }) as string[]
+                                        ).map((feature, i) => (
+                                            <Group
+                                                key={i}
+                                                gap="sm"
+                                                wrap="nowrap"
+                                            >
+                                                <Check
+                                                    size={16}
+                                                    className={styles.accent}
+                                                />
+                                                <Text
+                                                    size="sm"
+                                                    fw={i < 2 ? 600 : 400}
+                                                >
+                                                    {feature}
+                                                </Text>
+                                            </Group>
+                                        ))}
+                                    </Stack>
+                                </Stack>
+                                <Button
+                                    fullWidth
+                                    radius="md"
+                                    className={styles.ctaButton}
+                                    mt="xl"
+                                >
+                                    {t("landing.pricing.cards.pro.cta")}
+                                </Button>
+                            </Stack>
+                        </Card>
+
+                        {/* BUSINESS */}
+                        <Card
+                            className={`${styles.pricingCard} ${isPricingVisible ? styles.staggered : ""}`}
+                            style={{ animationDelay: "0.4s", opacity: isPricingVisible ? 1 : 0 }}
+                            padding="xl"
+                            radius="md"
+                            withBorder
+                        >
+                            <Stack
+                                justify="space-between"
+                                h="100%"
+                            >
+                                <Stack gap="md">
+                                    <Text
+                                        fw={700}
+                                        size="xl"
+                                    >
+                                        {t("landing.pricing.cards.business.title")}
+                                    </Text>
+                                    <Text
+                                        size="sm"
+                                        c="dimmed"
+                                    >
+                                        {t("landing.pricing.cards.business.description")}
+                                    </Text>
+                                    <Group
+                                        align="flex-end"
+                                        gap={4}
+                                        mt="md"
+                                    >
+                                        <Text className={styles.priceTitle}>
+                                            {t("landing.pricing.cards.business.price")}
+                                        </Text>
+                                        <Text className={styles.pricePeriod}>
+                                            {t("landing.pricing.cards.business.period")}
+                                        </Text>
+                                    </Group>
+                                    <Stack
+                                        gap="xs"
+                                        mt="md"
+                                    >
+                                        {(
+                                            t("landing.pricing.cards.business.features", {
+                                                returnObjects: true,
+                                            }) as string[]
+                                        ).map((feature, i) => (
+                                            <Group
+                                                key={i}
+                                                gap="sm"
+                                                wrap="nowrap"
+                                            >
+                                                <Check
+                                                    size={16}
+                                                    className={styles.accent}
+                                                />
+                                                <Text size="sm">{feature}</Text>
+                                            </Group>
+                                        ))}
+                                    </Stack>
+                                </Stack>
+                                <Button
+                                    fullWidth
+                                    radius="md"
+                                    variant="outline"
+                                    mt="xl"
+                                >
+                                    {t("landing.pricing.cards.business.cta")}
+                                </Button>
+                            </Stack>
+                        </Card>
+                    </SimpleGrid>
+
+                    <Box className={styles.pricingFooter}>
+                        <Text
+                            size="sm"
+                            c="dimmed"
+                        >
+                            {t("landing.pricing.footer.noCard")} •{" "}
+                            {t("landing.pricing.footer.cancel")}
+                        </Text>
+                    </Box>
                 </Container>
             </section>
 
