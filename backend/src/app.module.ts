@@ -10,6 +10,7 @@ import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handleba
 import { AuthModule } from "./modules/auth.module";
 import { UsersModule } from "./modules/users.module";
 import { AiModule } from "./modules/ai.module";
+import { ChatSettingsModule } from "./modules/chat-settings.module";
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { AiModule } from "./modules/ai.module";
         AuthModule,
         UsersModule,
         AiModule,
+        ChatSettingsModule,
         MailerModule.forRoot({
             transport: {
                 host: process.env.SMTP_HOST,

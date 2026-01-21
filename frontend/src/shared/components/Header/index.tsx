@@ -4,7 +4,7 @@ import { Button, Group, Text, Menu, Container, Select } from "@mantine/core";
 import AuthModal from "../AuthModal";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
-import { logout } from "../../../entities/user/userSlice";
+import { logout } from "../../store/userSlice";
 import ThemeToggle from "@/shared/components/ThemeToggle";
 import { useRouter } from "next/router";
 import Link from "next/link";

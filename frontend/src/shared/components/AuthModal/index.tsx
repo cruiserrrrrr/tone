@@ -12,8 +12,8 @@ import {
 } from "@mantine/core";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
-import { loginThunk, registerThunk } from "../../../entities/user/userSlice/thunks";
-import { clearError } from "../../../entities/user/userSlice";
+import { loginThunk, registerThunk } from "@/shared/store/userSlice/thunks";
+import { clearError } from "../../store/userSlice";
 
 interface AuthModalProps {
     opened: boolean;

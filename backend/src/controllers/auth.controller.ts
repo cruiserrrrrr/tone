@@ -28,6 +28,18 @@ export class AuthController {
         return this.authService.login(loginDto);
     }
 
+    @Post("admin/login")
+    @HttpCode(HttpStatus.OK)
+    adminLogin(@Body() loginDto: LoginDto) {
+        return this.authService.adminLogin(loginDto);
+    }
+
+    @Post("admin/logout")
+    @HttpCode(HttpStatus.OK)
+    adminLogout() {
+        return { message: "Logged out successfully" };
+    }
+
     @UseGuards(JwtAuthGuard)
     @Get("check")
     checkAuth(@Request() req) {

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User, AuthResponse } from "../../../shared/services/AuthService";
+import { User, AuthResponse } from "../../services/AuthService";
 import { loginThunk, registerThunk } from "./thunks";
 
 declare const chrome: any;
