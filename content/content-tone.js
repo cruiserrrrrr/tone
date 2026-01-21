@@ -72,10 +72,14 @@ const injectToneButton = async () => {
   if (container && !container.querySelector(".tone-toggle")) {
     const button = document.createElement("div");
     button.className = "btn-icon btn-menu-toggle tone-toggle";
-    button.innerHTML = '<span class="tone-button">T</span>';
+    button.innerHTML =
+      '<span class="tone-button">T</span><span class="tone-loader"></span>';
 
-    button.addEventListener("click", (e) => {
+    button.addEventListener("click", async (e) => {
       e.stopPropagation();
+
+      if (button.classList.contains("is-loading")) return;
+
       console.log("Tone button clicked");
 
       // Получаем все сообщения клиента (входящие сообщения)
@@ -109,7 +113,11 @@ const injectToneButton = async () => {
       console.log(conversationJSON);
 
       if (clientMessages.length > 0) {
-        generateText(conversationJSON).then((result) => {
+        button.classList.add("is-loading");
+        container.classList.add("is-loading");
+
+        try {
+          const result = await generateText(conversationJSON);
           console.log("AI result:", result);
           if (result && result.response) {
             const inputDiv = document.querySelector(
@@ -120,7 +128,12 @@ const injectToneButton = async () => {
               inputDiv.dispatchEvent(new Event("input", { bubbles: true }));
             }
           }
-        });
+        } catch (error) {
+          console.error("Error generating text:", error);
+        } finally {
+          button.classList.remove("is-loading");
+          container.classList.remove("is-loading");
+        }
       }
     });
 
