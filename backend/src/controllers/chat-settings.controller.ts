@@ -32,11 +32,7 @@ export class ChatSettingsController {
         return this.chatSettingsService.findAllServices();
     }
 
-    @Roles(UserRole.ADMIN)
-    @Post("services")
-    async createService(@Body() dto: CreateChatServiceDto) {
-        return this.chatSettingsService.createService(dto);
-    }
+    // @Roles(UserRole.ADMIN)
 
     @Roles(UserRole.ADMIN)
     @Patch("services/:id")
@@ -54,6 +50,11 @@ export class ChatSettingsController {
     }
 
     // --- User Endpoints (Пользовательские настройки) ---
+    @Post("services")
+    async createService(@Body() dto: CreateChatServiceDto) {
+        return this.chatSettingsService.createService(dto);
+    }
+
     @Get("user")
     async getUserSettings(@Req() req) {
         return this.chatSettingsService.getUserSettings(req.user.id);
