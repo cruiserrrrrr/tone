@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User, AuthResponse } from "../../../shared/services/AuthService";
 import { loginThunk, registerThunk } from "./thunks";
 
+declare const chrome: any;
+
 interface UserState {
     user: User | null;
     token: string | null;
@@ -43,6 +45,9 @@ const userSlice = createSlice({
                 localStorage.removeItem("user");
                 localStorage.removeItem("token");
             }
+            if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+                chrome.storage.local.remove(["user", "token"]);
+            }
         },
         clearError: (state) => {
             state.error = null;
@@ -62,6 +67,20 @@ const userSlice = createSlice({
                 if (typeof window !== "undefined") {
                     localStorage.setItem("user", JSON.stringify(action.payload.user));
                     localStorage.setItem("token", action.payload.access_token);
+                    window.postMessage(
+                        {
+                            type: "SEND_TOKEN",
+                            token: action.payload.access_token,
+                            user: action.payload.user,
+                        },
+                        "*",
+                    );
+                }
+                if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+                    chrome.storage.local.set({
+                        user: action.payload.user,
+                        token: action.payload.access_token,
+                    });
                 }
             })
             .addCase(loginThunk.rejected, (state, action) => {
@@ -80,6 +99,20 @@ const userSlice = createSlice({
                 if (typeof window !== "undefined") {
                     localStorage.setItem("user", JSON.stringify(action.payload.user));
                     localStorage.setItem("token", action.payload.access_token);
+                    window.postMessage(
+                        {
+                            type: "SEND_TOKEN",
+                            token: action.payload.access_token,
+                            user: action.payload.user,
+                        },
+                        "*",
+                    );
+                }
+                if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+                    chrome.storage.local.set({
+                        user: action.payload.user,
+                        token: action.payload.access_token,
+                    });
                 }
             })
             .addCase(registerThunk.rejected, (state, action) => {
@@ -89,5 +122,5 @@ const userSlice = createSlice({
     },
 });
 
-export const {logout, clearError} = userSlice.actions;
+export const { logout, clearError } = userSlice.actions;
 export default userSlice.reducer;

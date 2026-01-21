@@ -21,12 +21,11 @@ async function bootstrap() {
     // Добавляем глобальный фильтр для обработки всех ошибок
     app.useGlobalFilters(new AllExceptionsFilter());
 
-    if (process.env.NODE_ENV == "dev")
-        app.enableCors({
-            origin: "http://localhost:3000",
-            credentials: true,
-            methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-        });
+    app.enableCors({
+        origin: true,
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    });
 
     await app.listen(3001);
 }

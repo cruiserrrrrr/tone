@@ -9,7 +9,7 @@ import { join } from "path";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { AuthModule } from "./modules/auth.module";
 import { UsersModule } from "./modules/users.module";
-
+import { AiModule } from "./modules/ai.module";
 
 @Module({
     imports: [
@@ -20,6 +20,7 @@ import { UsersModule } from "./modules/users.module";
         }),
         AuthModule,
         UsersModule,
+        AiModule,
         MailerModule.forRoot({
             transport: {
                 host: process.env.SMTP_HOST,
@@ -57,10 +58,8 @@ import { UsersModule } from "./modules/users.module";
             autoLoadEntities: true,
             synchronize: false,
         }),
-
     ],
     controllers: [AppController],
     providers: [AppService],
 })
-export class AppModule {
-}
+export class AppModule {}
