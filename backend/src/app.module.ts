@@ -11,6 +11,7 @@ import { AuthModule } from "./modules/auth.module";
 import { UsersModule } from "./modules/users.module";
 import { AiModule } from "./modules/ai.module";
 import { ChatSettingsModule } from "./modules/chat-settings.module";
+import { PlansModule } from "./modules/plans.module";
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { ChatSettingsModule } from "./modules/chat-settings.module";
         UsersModule,
         AiModule,
         ChatSettingsModule,
+        PlansModule,
         MailerModule.forRoot({
             transport: {
                 host: process.env.SMTP_HOST,
