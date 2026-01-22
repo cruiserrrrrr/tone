@@ -20,20 +20,21 @@ import {
     UpdateUserChatSettingDto,
 } from "../dto/chat-settings.dto";
 
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller("chat-settings")
 export class ChatSettingsController {
     constructor(private readonly chatSettingsService: ChatSettingsService) {}
 
     // --- Admin Endpoints (Управление сервисами) ---
-    @Roles(UserRole.ADMIN)
-    @Get("services")
-    async getAllServices() {
-        return this.chatSettingsService.findAllServices();
-    }
-
     // @Roles(UserRole.ADMIN)
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(UserRole.ADMIN)
+    @Post("services")
+    async createService(@Body() dto: CreateChatServiceDto) {
+        return this.chatSettingsService.createService(dto);
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @Patch("services/:id")
     async updateService(
@@ -43,6 +44,7 @@ export class ChatSettingsController {
         return this.chatSettingsService.updateService(id, dto);
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @Delete("services/:id")
     async deleteService(@Param("id") id: number) {
@@ -50,16 +52,20 @@ export class ChatSettingsController {
     }
 
     // --- User Endpoints (Пользовательские настройки) ---
-    @Post("services")
-    async createService(@Body() dto: CreateChatServiceDto) {
-        return this.chatSettingsService.createService(dto);
+
+    @UseGuards(JwtAuthGuard)
+    @Get("services")
+    async getAllServices() {
+        return this.chatSettingsService.findAllServices();
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get("user")
     async getUserSettings(@Req() req) {
         return this.chatSettingsService.getUserSettings(req.user.id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post("user")
     async updateUserSettings(
         @Req() req,

@@ -72,8 +72,18 @@ const injectToneButton = async () => {
   if (container && !container.querySelector(".tone-toggle")) {
     const button = document.createElement("div");
     button.className = "btn-icon btn-menu-toggle tone-toggle";
-    button.innerHTML =
-      '<span class="tone-button">T</span><span class="tone-loader"></span>';
+    button.innerHTML = `<span class="tone-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap">
+          <defs>
+            <linearGradient id="shine" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="white" stop-opacity="1" />
+              <stop offset="50%" stop-color="#a5b4fc" stop-opacity="1" />
+              <stop offset="100%" stop-color="white" stop-opacity="1" />
+            </linearGradient>
+          </defs>
+          <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
+        </svg>
+      </span>`;
 
     button.addEventListener("click", async (e) => {
       e.stopPropagation();

@@ -3,6 +3,15 @@
   "name": "Tone Content Script",
   "version": "1.0.0",
   "description": "Basic script for Tone",
+  "icons": {
+    "16": "logo.png",
+    "32": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  },
+  "action": {
+    "default_icon": "logo.png"
+  },
   "permissions": [
     "storage"
   ],
