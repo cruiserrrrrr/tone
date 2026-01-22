@@ -1,7 +1,7 @@
 import "@/styles/globals.scss";
 import "@mantine/core/styles.css";
 import i18n from "@/shared/i18n/config";
-import type { AppProps } from "next/app";
+import NextApp, { AppContext, AppProps } from "next/app";
 import {
     MantineProvider,
     createTheme,
@@ -68,3 +68,41 @@ export default function App({ Component, pageProps }: AppProps) {
         </Provider>
     );
 }
+
+App.getInitialProps = async (appContext: AppContext) => {
+    const appProps = await NextApp.getInitialProps(appContext);
+    let lng = "ru";
+
+    if (appContext.ctx.req) {
+        // На сервере извлекаем язык из куки i18next
+        const cookie = appContext.ctx.req.headers.cookie;
+        if (cookie) {
+            const match = cookie.match(/i18next=([^;]+)/);
+            if (match) {
+                lng = match[1];
+            } else {
+                // Если куки нет, пробуем Accept-Language
+                const acceptLang = appContext.ctx.req.headers["accept-language"];
+                if (acceptLang && acceptLang.startsWith("en")) {
+                    lng = "en";
+                }
+            }
+        } else {
+            // Если заголовка cookie вообще нет (первый запрос)
+            const acceptLang = appContext.ctx.req.headers["accept-language"];
+            if (acceptLang && acceptLang.startsWith("en")) {
+                lng = "en";
+            }
+        }
+        // Устанавливаем язык для текущего серверного рендера
+        await i18n.changeLanguage(lng);
+    }
+
+    return {
+        ...appProps,
+        pageProps: {
+            ...appProps.pageProps,
+            lng,
+        },
+    };
+};

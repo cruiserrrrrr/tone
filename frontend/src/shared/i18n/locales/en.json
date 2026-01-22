@@ -143,5 +143,17 @@
       "cta": "Install Extension",
       "waitlist": "Join Waitlist"
     }
+  },
+  "chatSettings": {
+    "title": "Chat Settings",
+    "description": "Configure the tone and goal of communication for each service separately.",
+    "ton": "Communication Tone",
+    "tonPlaceholder": "e.g.: Professional, friendly...",
+    "goal": "Chat Goal",
+    "goalPlaceholder": "e.g.: Selling services, customer support...",
+    "save": "Save",
+    "loading": "Loading...",
+    "success": "Settings saved",
+    "error": "Error saving settings"
   }
 }
