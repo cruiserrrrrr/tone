@@ -31,12 +31,10 @@ abstract class ServiceBase {
         let url = `${endpoint}`;
 
         const crmHeaders =
-            isClient() && window.location.href.includes("crm")
-                ? {"X-Crm": "true"}
-                : {};
+            isClient() && window.location.href.includes("crm") ? { "X-Crm": "true" } : {};
 
         const token = isClient() ? localStorage.getItem("token") : null;
-        const authHeader = token ? {"Authorization": `Bearer ${token}`} : {};
+        const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
 
         const config: any = {
             method,
@@ -50,9 +48,7 @@ abstract class ServiceBase {
             credentials: "include",
         };
 
-        const baseUrl = isClient()
-            ? process.env.NEXT_PUBLIC_REQUEST_URL
-            : process.env.REQUEST_URL;
+        const baseUrl = isClient() ? process.env.NEXT_PUBLIC_REQUEST_URL : process.env.REQUEST_URL;
 
         if (baseUrl) {
             // Убеждаемся, что между baseUrl и url нет двойного слеша или отсутствующего слеша
@@ -83,9 +79,7 @@ abstract class ServiceBase {
                     !endpoint.includes("/auth/profile") &&
                     !endpoint.includes("/auth/login") &&
                     retryWithRefresh) ||
-                (endpoint.includes("/collections/") &&
-                    response.status === 403 &&
-                    method === "POST")
+                (endpoint.includes("/collections/") && response.status === 403 && method === "POST")
             ) {
                 return this.handleUnauthorized<T>(
                     endpoint,
@@ -111,7 +105,12 @@ abstract class ServiceBase {
                 }
             }
 
-            return (await response.json()) as T;
+            if (response.status === 204) {
+                return {} as T;
+            }
+
+            const text = await response.text();
+            return text ? JSON.parse(text) : ({} as T);
         } catch (error) {
             console.error("Fetch error:", error);
             throw error;
@@ -170,18 +169,13 @@ abstract class ServiceBase {
             const refreshResponse = await fetch(refreshUrl, refreshConfig);
 
             if (!refreshResponse.ok) {
-                throw new Error(
-                    `Failed to refresh token: ${refreshResponse.status}`,
-                );
+                throw new Error(`Failed to refresh token: ${refreshResponse.status}`);
             }
 
             // Проверяем наличие заголовка Set-Cookie в ответе
             const setCookieHeader = refreshResponse.headers.get("set-cookie");
             if (setCookieHeader && !isClient()) {
-                console.log(
-                    "Received Set-Cookie in handleUnauthorized:",
-                    setCookieHeader,
-                );
+                console.log("Received Set-Cookie in handleUnauthorized:", setCookieHeader);
 
                 // Обрабатываем заголовок Set-Cookie для серверного рендеринга
                 // Для Next.js на сервере нам нужно обновить cookies в контексте запроса
@@ -202,7 +196,7 @@ abstract class ServiceBase {
                     if (equalIndex > 0) {
                         const name = mainPart.substring(0, equalIndex).trim();
                         const value = mainPart.substring(equalIndex + 1).trim();
-                        parsedCookies.push({name, value});
+                        parsedCookies.push({ name, value });
                     }
                 }
 
@@ -212,10 +206,7 @@ abstract class ServiceBase {
                         .map((cookie) => `${cookie.name}=${cookie.value}`)
                         .join("; ");
 
-                    console.log(
-                        "New Cookie header for subsequent requests:",
-                        newCookieHeader,
-                    );
+                    console.log("New Cookie header for subsequent requests:", newCookieHeader);
 
                     // Обновляем заголовки для текущего запроса и запросов в очереди
                     headers = {
@@ -257,14 +248,7 @@ abstract class ServiceBase {
             }
 
             // Повторяем исходный запрос с обновленным токеном
-            return this.request<T>(
-                endpoint,
-                method,
-                body,
-                headers,
-                false,
-                extendedErrorInfo,
-            );
+            return this.request<T>(endpoint, method, body, headers, false, extendedErrorInfo);
         } catch (refreshError) {
             // Если не удалось обновить токен, очищаем очередь и выбрасываем ошибку
             isRefreshing = false;
@@ -319,14 +303,7 @@ abstract class ServiceBase {
         retryWithRefresh = true,
         extendedErrorInfo = false,
     ): Promise<T> {
-        return this.request<T>(
-            endpoint,
-            "PUT",
-            body,
-            headers,
-            retryWithRefresh,
-            extendedErrorInfo,
-        );
+        return this.request<T>(endpoint, "PUT", body, headers, retryWithRefresh, extendedErrorInfo);
     }
 
     protected static patch<T>(

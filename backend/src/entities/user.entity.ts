@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+} from "typeorm";
 import { Exclude } from "class-transformer";
 import { UserRole } from "../enums/user-role.enum";
 import { Plan } from "./plan.entity";
@@ -34,7 +40,7 @@ export class User {
     @Column({ name: "plan_id", nullable: true })
     planId: number;
 
-    @ManyToOne(() => Plan)
+    @ManyToOne(() => Plan, { onDelete: "SET NULL" })
     @JoinColumn({ name: "plan_id" })
     plan: Plan;
 

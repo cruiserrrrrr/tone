@@ -24,6 +24,9 @@ export class Plan {
     @Column({ type: "text", nullable: true })
     description: string;
 
+    @Column({ type: "text", nullable: true })
+    cta: string;
+
     @Column({ name: "price_usd", type: "decimal", precision: 10, scale: 2 })
     priceUsd: number;
 

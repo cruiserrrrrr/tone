@@ -30,7 +30,7 @@ export class PlanLimit {
     @Column({ name: "all_tones_unlocked", default: false })
     allTonesUnlocked: boolean;
 
-    @OneToOne(() => Plan, (plan) => plan.limits)
+    @OneToOne(() => Plan, (plan) => plan.limits, { onDelete: "CASCADE" })
     @JoinColumn({ name: "plan_id" })
     plan: Plan;
 

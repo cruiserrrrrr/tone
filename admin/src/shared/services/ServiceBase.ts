@@ -31,7 +31,7 @@ abstract class ServiceBase {
         let url = `${endpoint}`;
 
         const token = isClient() ? localStorage.getItem("admin_token") : null;
-        const authHeader = token ? {"Authorization": `Bearer ${token}`} : {};
+        const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
 
         const config: any = {
             method,
@@ -44,9 +44,7 @@ abstract class ServiceBase {
             credentials: "include",
         };
 
-        const baseUrl = isClient()
-            ? process.env.NEXT_PUBLIC_REQUEST_URL
-            : process.env.REQUEST_URL;
+        const baseUrl = isClient() ? process.env.NEXT_PUBLIC_REQUEST_URL : process.env.REQUEST_URL;
 
         if (baseUrl) {
             const normalizedBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
@@ -58,10 +56,10 @@ abstract class ServiceBase {
             const response = await fetch(url, config);
 
             if (
-                (response.status === 401 &&
-                    !endpoint.includes("/auth/refresh") &&
-                    !endpoint.includes("/auth/login") &&
-                    retryWithRefresh)
+                response.status === 401 &&
+                !endpoint.includes("/auth/refresh") &&
+                !endpoint.includes("/auth/login") &&
+                retryWithRefresh
             ) {
                 return this.handleUnauthorized<T>(
                     endpoint,
@@ -87,7 +85,12 @@ abstract class ServiceBase {
                 }
             }
 
-            return (await response.json()) as T;
+            if (response.status === 204) {
+                return {} as T;
+            }
+
+            const text = await response.text();
+            return text ? JSON.parse(text) : ({} as T);
         } catch (error) {
             console.error("Fetch error:", error);
             throw error;
@@ -127,9 +130,7 @@ abstract class ServiceBase {
             const refreshResponse = await fetch(refreshUrl, refreshConfig);
 
             if (!refreshResponse.ok) {
-                throw new Error(
-                    `Failed to refresh token: ${refreshResponse.status}`,
-                );
+                throw new Error(`Failed to refresh token: ${refreshResponse.status}`);
             }
 
             isRefreshing = false;
@@ -153,14 +154,7 @@ abstract class ServiceBase {
                 }
             }
 
-            return this.request<T>(
-                endpoint,
-                method,
-                body,
-                headers,
-                false,
-                extendedErrorInfo,
-            );
+            return this.request<T>(endpoint, method, body, headers, false, extendedErrorInfo);
         } catch (refreshError) {
             isRefreshing = false;
             refreshQueue.forEach((request) => {
@@ -211,14 +205,7 @@ abstract class ServiceBase {
         retryWithRefresh = true,
         extendedErrorInfo = false,
     ): Promise<T> {
-        return this.request<T>(
-            endpoint,
-            "PUT",
-            body,
-            headers,
-            retryWithRefresh,
-            extendedErrorInfo,
-        );
+        return this.request<T>(endpoint, "PUT", body, headers, retryWithRefresh, extendedErrorInfo);
     }
 
     protected static patch<T>(

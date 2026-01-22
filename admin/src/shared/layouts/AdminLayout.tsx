@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/shared/store";
 import { logout, initializeUser } from "@/shared/store/userSlice";
-import { LayoutDashboard, Settings, UserCog, LogOut } from "lucide-react";
+import { LayoutDashboard, Settings, UserCog, LogOut, CreditCard } from "lucide-react";
 import React, { useEffect } from "react";
 
 interface AdminLayoutProps {
@@ -34,6 +34,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     const navItems = [
         { label: "Dashboard", icon: LayoutDashboard, path: "/" },
         { label: "Service Settings", icon: Settings, path: "/services" },
+        { label: "Payment Plans", icon: CreditCard, path: "/plans" },
         { label: "User Settings", icon: UserCog, path: "/profile" },
     ];
 
