@@ -33,16 +33,12 @@ abstract class ServiceBase {
         const crmHeaders =
             isClient() && window.location.href.includes("crm") ? { "X-Crm": "true" } : {};
 
-        const token = isClient() ? localStorage.getItem("token") : null;
-        const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
-
         const config: any = {
             method,
             headers: {
                 "Content-Type": "application/json",
                 ...headers,
                 ...crmHeaders,
-                ...authHeader,
             },
             body: body ? JSON.stringify(body) : undefined,
             credentials: "include",
@@ -150,10 +146,14 @@ abstract class ServiceBase {
 
         // Начинаем процесс обновления токена
         isRefreshing = true;
+        const baseUrl = isClient() ? process.env.NEXT_PUBLIC_REQUEST_URL : process.env.REQUEST_URL;
+        const normalizedBaseUrl = baseUrl?.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
 
         try {
             // Вызываем refresh для обновления токена напрямую
-            const refreshUrl = "/api/auth/refresh";
+            const refreshUrl = normalizedBaseUrl?.includes("/api")
+                ? `${normalizedBaseUrl}/auth/refresh`
+                : `${normalizedBaseUrl}/api/auth/refresh`;
             const refreshConfig: RequestInit = {
                 method: "GET",
                 credentials: "include",
@@ -170,6 +170,18 @@ abstract class ServiceBase {
 
             if (!refreshResponse.ok) {
                 throw new Error(`Failed to refresh token: ${refreshResponse.status}`);
+            }
+
+            const data = await refreshResponse.json();
+
+            if (isClient()) {
+                window.postMessage(
+                    {
+                        type: "SEND_TOKEN",
+                        user: data.user,
+                    },
+                    "*",
+                );
             }
 
             // Проверяем наличие заголовка Set-Cookie в ответе

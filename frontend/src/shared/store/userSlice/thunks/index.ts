@@ -24,3 +24,11 @@ export const registerThunk = createAsyncThunk(
         }
     },
 );
+
+export const checkAuthThunk = createAsyncThunk("user/checkAuth", async (_, { rejectWithValue }) => {
+    try {
+        return await AuthService.checkAuth();
+    } catch (error: any) {
+        return rejectWithValue(error.message || "Auth check failed");
+    }
+});

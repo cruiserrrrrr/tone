@@ -19,3 +19,11 @@ export const checkAuthThunk = createAsyncThunk("user/checkAuth", async (_, { rej
         return rejectWithValue(error.message || "Failed to check auth");
     }
 });
+
+export const logoutThunk = createAsyncThunk("user/logout", async () => {
+    try {
+        await AuthService.logout();
+    } catch (e) {
+        // Ignore
+    }
+});

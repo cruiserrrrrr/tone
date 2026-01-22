@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/shared/store";
 import { logout, initializeUser } from "@/shared/store/userSlice";
+import { checkAuthThunk } from "@/shared/store/userSlice/thunks";
 import { LayoutDashboard, Settings, UserCog, LogOut, CreditCard } from "lucide-react";
 import React, { useEffect } from "react";
 
@@ -19,6 +20,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
     useEffect(() => {
         dispatch(initializeUser());
+        dispatch(checkAuthThunk());
     }, [dispatch]);
 
     useEffect(() => {

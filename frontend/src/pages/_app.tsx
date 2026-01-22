@@ -12,6 +12,20 @@ import {
 import { Provider } from "react-redux";
 import { store } from "../shared/store";
 import { getCookie, setCookie } from "../shared/helpers/cookie";
+import { useEffect } from "react";
+import { checkAuthThunk } from "@/shared/store/userSlice/thunks";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/shared/store";
+
+function AuthInitializer({ children }: { children: React.ReactNode }) {
+    const dispatch = useDispatch<AppDispatch>();
+
+    useEffect(() => {
+        dispatch(checkAuthThunk());
+    }, [dispatch]);
+
+    return <>{children}</>;
+}
 
 const theme = createTheme({
     primaryColor: "gray",
@@ -63,7 +77,9 @@ export default function App({ Component, pageProps }: AppProps) {
                 colorSchemeManager={colorSchemeManager}
                 defaultColorScheme="dark"
             >
-                <Component {...pageProps} />
+                <AuthInitializer>
+                    <Component {...pageProps} />
+                </AuthInitializer>
             </MantineProvider>
         </Provider>
     );

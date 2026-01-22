@@ -38,6 +38,17 @@ class AuthService extends ServiceBase {
     public static async login(data: LoginDto): Promise<AuthResponse> {
         return this.post<AuthResponse>("/api/auth/login", data);
     }
+
+    public static async checkAuth(): Promise<{
+        authorized: boolean;
+        user: User;
+    }> {
+        return this.get<{ authorized: boolean; user: User }>("/api/auth/check");
+    }
+
+    public static async logout(): Promise<{ message: string }> {
+        return this.post<{ message: string }>("/api/auth/logout", {});
+    }
 }
 
 export default AuthService;

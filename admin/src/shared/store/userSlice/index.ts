@@ -4,14 +4,12 @@ import { loginThunk, checkAuthThunk } from "./thunks";
 
 interface UserState {
     user: User | null;
-    token: string | null;
     loading: boolean;
     error: string | null;
 }
 
 const initialState: UserState = {
     user: null,
-    token: null,
     loading: false,
     error: null,
 };
@@ -23,10 +21,8 @@ const userSlice = createSlice({
         initializeUser: (state) => {
             try {
                 const user = localStorage.getItem("admin_user");
-                const token = localStorage.getItem("admin_token");
-                if (user && token) {
+                if (user) {
                     state.user = JSON.parse(user);
-                    state.token = token;
                 }
             } catch (e) {
                 // Ignore
@@ -34,11 +30,9 @@ const userSlice = createSlice({
         },
         logout: (state) => {
             state.user = null;
-            state.token = null;
             state.error = null;
             if (typeof window !== "undefined") {
                 localStorage.removeItem("admin_user");
-                localStorage.removeItem("admin_token");
             }
         },
         clearError: (state) => {
@@ -54,10 +48,8 @@ const userSlice = createSlice({
             .addCase(loginThunk.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
                 state.loading = false;
                 state.user = action.payload.user;
-                state.token = action.payload.access_token;
                 if (typeof window !== "undefined") {
                     localStorage.setItem("admin_user", JSON.stringify(action.payload.user));
-                    localStorage.setItem("admin_token", action.payload.access_token);
                 }
             })
             .addCase(loginThunk.rejected, (state, action) => {
@@ -69,10 +61,8 @@ const userSlice = createSlice({
             })
             .addCase(checkAuthThunk.rejected, (state) => {
                 state.user = null;
-                state.token = null;
                 if (typeof window !== "undefined") {
                     localStorage.removeItem("admin_user");
-                    localStorage.removeItem("admin_token");
                 }
             });
     },

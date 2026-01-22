@@ -30,15 +30,11 @@ abstract class ServiceBase {
     ): Promise<T> {
         let url = `${endpoint}`;
 
-        const token = isClient() ? localStorage.getItem("admin_token") : null;
-        const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
-
         const config: any = {
             method,
             headers: {
                 "Content-Type": "application/json",
                 ...headers,
-                ...authHeader,
             },
             body: body ? JSON.stringify(body) : undefined,
             credentials: "include",
@@ -121,7 +117,14 @@ abstract class ServiceBase {
         isRefreshing = true;
 
         try {
-            const refreshUrl = "/api/auth/refresh";
+            const baseUrl = isClient()
+                ? process.env.NEXT_PUBLIC_REQUEST_URL
+                : process.env.REQUEST_URL;
+            const normalizedBaseUrl = baseUrl?.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+            const refreshUrl = normalizedBaseUrl?.includes("/api")
+                ? `${normalizedBaseUrl}/auth/refresh`
+                : `${normalizedBaseUrl}/api/auth/refresh`;
+
             const refreshConfig: RequestInit = {
                 method: "GET",
                 credentials: "include",
@@ -131,6 +134,16 @@ abstract class ServiceBase {
 
             if (!refreshResponse.ok) {
                 throw new Error(`Failed to refresh token: ${refreshResponse.status}`);
+            }
+
+            const data = await refreshResponse.json();
+
+            if (isClient()) {
+                window.dispatchEvent(
+                    new CustomEvent("admin_token_refreshed", {
+                        detail: { user: data.user },
+                    }),
+                );
             }
 
             isRefreshing = false;

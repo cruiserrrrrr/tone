@@ -4,7 +4,8 @@ import Header from "@/shared/components/Header";
 import UserSettings from "./components/UserSettings";
 import ChatSettings from "./components/ChatSettings";
 import GeneralInstructions from "./components/GeneralInstructions";
-import { User, MessageSquare, BookOpen } from "lucide-react";
+import PaymentPlans from "./components/PaymentPlans";
+import { User, MessageSquare, BookOpen, CreditCard } from "lucide-react";
 
 const Profile = () => {
     return (
@@ -45,6 +46,12 @@ const Profile = () => {
                     >
                         Общие инструкции
                     </Tabs.Tab>
+                    <Tabs.Tab
+                        value="payment-plans"
+                        leftSection={<CreditCard size={18} />}
+                    >
+                        Планы оплаты
+                    </Tabs.Tab>
                 </Tabs.List>
 
                 <Tabs.Panel value="user-settings">
@@ -57,6 +64,10 @@ const Profile = () => {
 
                 <Tabs.Panel value="general-instructions">
                     <GeneralInstructions />
+                </Tabs.Panel>
+
+                <Tabs.Panel value="payment-plans">
+                    <PaymentPlans />
                 </Tabs.Panel>
             </Tabs>
         </Container>

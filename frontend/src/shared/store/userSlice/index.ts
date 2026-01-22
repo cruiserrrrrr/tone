@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User, AuthResponse } from "../../services/AuthService";
-import { loginThunk, registerThunk } from "./thunks";
+import { loginThunk, registerThunk, checkAuthThunk } from "./thunks";
 
 declare const chrome: any;
 
 interface UserState {
     user: User | null;
-    token: string | null;
     loading: boolean;
     error: string | null;
 }
@@ -15,10 +14,8 @@ const loadState = (): Partial<UserState> => {
     try {
         if (typeof window === "undefined") return {};
         const user = localStorage.getItem("user");
-        const token = localStorage.getItem("token");
         return {
             user: user ? JSON.parse(user) : null,
-            token: token || null,
         };
     } catch (e) {
         return {};
@@ -27,7 +24,6 @@ const loadState = (): Partial<UserState> => {
 
 const initialState: UserState = {
     user: null,
-    token: null,
     loading: false,
     error: null,
     ...loadState(),
@@ -39,11 +35,9 @@ const userSlice = createSlice({
     reducers: {
         logout: (state) => {
             state.user = null;
-            state.token = null;
             state.error = null;
             if (typeof window !== "undefined") {
                 localStorage.removeItem("user");
-                localStorage.removeItem("token");
             }
             if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
                 chrome.storage.local.remove(["user", "token"]);
@@ -63,14 +57,11 @@ const userSlice = createSlice({
             .addCase(loginThunk.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
                 state.loading = false;
                 state.user = action.payload.user;
-                state.token = action.payload.access_token;
                 if (typeof window !== "undefined") {
                     localStorage.setItem("user", JSON.stringify(action.payload.user));
-                    localStorage.setItem("token", action.payload.access_token);
                     window.postMessage(
                         {
                             type: "SEND_TOKEN",
-                            token: action.payload.access_token,
                             user: action.payload.user,
                         },
                         "*",
@@ -79,7 +70,6 @@ const userSlice = createSlice({
                 if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
                     chrome.storage.local.set({
                         user: action.payload.user,
-                        token: action.payload.access_token,
                     });
                 }
             })
@@ -95,14 +85,11 @@ const userSlice = createSlice({
             .addCase(registerThunk.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
                 state.loading = false;
                 state.user = action.payload.user;
-                state.token = action.payload.access_token;
                 if (typeof window !== "undefined") {
                     localStorage.setItem("user", JSON.stringify(action.payload.user));
-                    localStorage.setItem("token", action.payload.access_token);
                     window.postMessage(
                         {
                             type: "SEND_TOKEN",
-                            token: action.payload.access_token,
                             user: action.payload.user,
                         },
                         "*",
@@ -111,13 +98,21 @@ const userSlice = createSlice({
                 if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
                     chrome.storage.local.set({
                         user: action.payload.user,
-                        token: action.payload.access_token,
                     });
                 }
             })
             .addCase(registerThunk.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
+            })
+            .addCase(checkAuthThunk.fulfilled, (state, action) => {
+                state.user = action.payload.user;
+            })
+            .addCase(checkAuthThunk.rejected, (state) => {
+                state.user = null;
+                if (typeof window !== "undefined") {
+                    localStorage.removeItem("user");
+                }
             });
     },
 });

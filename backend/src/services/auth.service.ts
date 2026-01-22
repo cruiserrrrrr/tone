@@ -75,10 +75,24 @@ export class AuthService {
         return this.loginUser(user, true);
     }
 
+    async refresh(refreshToken: string) {
+        try {
+            const payload = this.jwtService.verify(refreshToken);
+            const user = await this.usersService.findOneById(payload.sub);
+            if (!user) {
+                throw new UnauthorizedException();
+            }
+            return this.loginUser(user, user.role === UserRole.ADMIN);
+        } catch (e) {
+            throw new UnauthorizedException();
+        }
+    }
+
     private loginUser(user: User, includeRole = false) {
         const payload = { email: user.email, sub: user.id, role: user.role };
         const response: any = {
             access_token: this.jwtService.sign(payload),
+            refresh_token: this.jwtService.sign(payload, { expiresIn: "7d" }),
             user: {
                 id: user.id,
                 email: user.email,

@@ -7,7 +7,10 @@ import {
     HttpStatus,
     UseGuards,
     Request,
+    Res,
+    UnauthorizedException,
 } from "@nestjs/common";
+import { Response } from "express";
 import { AuthService } from "../services/auth.service";
 import { RegisterDto } from "../dto/register.dto";
 import { LoginDto } from "../dto/login.dto";
@@ -18,26 +21,94 @@ export class AuthController {
     constructor(private authService: AuthService) {}
 
     @Post("register")
-    register(@Body() registerDto: RegisterDto) {
-        return this.authService.register(registerDto);
+    async register(
+        @Body() registerDto: RegisterDto,
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        const result = await this.authService.register(registerDto);
+        this.setAuthCookies(res, result.access_token, result.refresh_token);
+        return {
+            user: result.user,
+        };
     }
 
     @Post("login")
     @HttpCode(HttpStatus.OK)
-    login(@Body() loginDto: LoginDto) {
-        return this.authService.login(loginDto);
+    async login(
+        @Body() loginDto: LoginDto,
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        const result = await this.authService.login(loginDto);
+        this.setAuthCookies(res, result.access_token, result.refresh_token);
+        return {
+            user: result.user,
+        };
     }
 
     @Post("admin/login")
     @HttpCode(HttpStatus.OK)
-    adminLogin(@Body() loginDto: LoginDto) {
-        return this.authService.adminLogin(loginDto);
+    async adminLogin(
+        @Body() loginDto: LoginDto,
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        const result = await this.authService.adminLogin(loginDto);
+        this.setAuthCookies(res, result.access_token, result.refresh_token);
+        return {
+            user: result.user,
+        };
+    }
+
+    @Post("logout")
+    @HttpCode(HttpStatus.OK)
+    logout(@Res({ passthrough: true }) res: Response) {
+        res.clearCookie("access_token");
+        res.clearCookie("refresh_token");
+        return { message: "Logged out successfully" };
     }
 
     @Post("admin/logout")
     @HttpCode(HttpStatus.OK)
-    adminLogout() {
+    adminLogout(@Res({ passthrough: true }) res: Response) {
+        res.clearCookie("access_token");
+        res.clearCookie("refresh_token");
         return { message: "Logged out successfully" };
+    }
+
+    @Get("refresh")
+    async refresh(@Request() req, @Res({ passthrough: true }) res: Response) {
+        const refreshToken = req.cookies["refresh_token"];
+        if (!refreshToken) {
+            throw new UnauthorizedException();
+        }
+
+        const result = await this.authService.refresh(refreshToken);
+        this.setAuthCookies(res, result.access_token, result.refresh_token);
+
+        return {
+            user: result.user,
+        };
+    }
+
+    private setAuthCookies(
+        res: Response,
+        accessToken: string,
+        refreshToken: string,
+    ) {
+        const isProd = process.env.NODE_ENV === "production";
+
+        res.cookie("access_token", accessToken, {
+            httpOnly: true,
+            secure: isProd,
+            sameSite: "strict",
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+        });
+
+        res.cookie("refresh_token", refreshToken, {
+            httpOnly: true,
+            secure: isProd,
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
     }
 
     @UseGuards(JwtAuthGuard)
