@@ -12,6 +12,7 @@ import { UsersModule } from "./modules/users.module";
 import { AiModule } from "./modules/ai.module";
 import { ChatSettingsModule } from "./modules/chat-settings.module";
 import { PlansModule } from "./modules/plans.module";
+import { CryptoCloudModule } from "./modules/crypto-cloud.module";
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { PlansModule } from "./modules/plans.module";
         AiModule,
         ChatSettingsModule,
         PlansModule,
+        CryptoCloudModule,
         MailerModule.forRoot({
             transport: {
                 host: process.env.SMTP_HOST,
