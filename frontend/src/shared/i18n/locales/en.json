@@ -41,6 +41,32 @@
         "ready": "Ready reply"
       }
     },
+    "difference": {
+      "title": "Your AI that gets tasks done",
+      "subtitle": "Our service works differently than a regular chatbot: it helps you not just get answers, but complete tasks fully.",
+      "items": [
+        {
+          "title": "Context and History",
+          "description": "The service remembers your tasks and context between sessions to provide more accurate and useful solutions."
+        },
+        {
+          "title": "Chains of Actions",
+          "description": "AI performs not just individual answers, but entire chains of actions, bringing your requests to a result."
+        },
+        {
+          "title": "Result-Oriented",
+          "description": "You don't just chat with a bot, you get a ready-made solution or a working result."
+        },
+        {
+          "title": "Rules and Control",
+          "description": "You can set limits and rules for the agent's work so that it acts exactly as you need."
+        },
+        {
+          "title": "Integration into the process",
+          "description": "The service is built into your processes, so it works with your data and tasks directly, without extra setup."
+        }
+      ]
+    },
     "howItWorks": {
       "title": "How Tone works",
       "steps": {

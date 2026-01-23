@@ -20,6 +20,8 @@ import {
     ShieldCheck,
     ArrowRight,
     X,
+    History,
+    Target,
 } from "lucide-react";
 import styles from "./index.module.scss";
 import { useTranslation } from "react-i18next";
@@ -33,12 +35,24 @@ const LandingPage = () => {
         root: null,
     });
 
+    const { ref: diffRef, entry: diffEntry } = useIntersection({
+        threshold: 0.1,
+        root: null,
+    });
+
     const isPricingVisible = pricingEntry?.isIntersecting;
+    const isDiffVisible = diffEntry?.isIntersecting;
 
     const problemItems = t("landing.problems.items", { returnObjects: true }) as string[];
     const solutionItems = t("landing.solution.items", { returnObjects: true }) as string[];
     const useCaseItems = t("landing.useCases.items", { returnObjects: true }) as string[];
     const whoIsItForItems = t("landing.whoIsItFor.items", { returnObjects: true }) as string[];
+    const differenceItems = t("landing.difference.items", { returnObjects: true }) as {
+        title: string;
+        description: string;
+    }[];
+
+    const diffIcons = [History, Zap, Target, Settings, MousePointerClick];
 
     return (
         <Box className={styles.root}>
@@ -100,7 +114,6 @@ const LandingPage = () => {
                     </Stack>
                 </Container>
             </section>
-
             {/* Problem Section */}
             <section className={styles.section}>
                 <Container size="lg">
@@ -140,7 +153,6 @@ const LandingPage = () => {
                     </Stack>
                 </Container>
             </section>
-
             {/* Pricing Section */}
             <section
                 className={styles.section}
@@ -492,7 +504,6 @@ const LandingPage = () => {
                     </Box>
                 </Container>
             </section>
-
             {/* Solution Section */}
             <section className={`${styles.section} ${styles.darkBg}`}>
                 <Container size="lg">
@@ -552,6 +563,81 @@ const LandingPage = () => {
                 </Container>
             </section>
 
+            {/* Difference Section */}
+            <section
+                className={styles.section}
+                ref={diffRef}
+            >
+                <Container size="lg">
+                    <Stack
+                        align="center"
+                        gap="xs"
+                        mb={50}
+                    >
+                        <Title
+                            order={2}
+                            className={styles.sectionTitle}
+                            ta="center"
+                        >
+                            {t("landing.difference.title")}
+                        </Title>
+                        <Text
+                            size="lg"
+                            c="dimmed"
+                            ta="center"
+                            maw={800}
+                        >
+                            {t("landing.difference.subtitle")}
+                        </Text>
+                    </Stack>
+
+                    <SimpleGrid
+                        cols={{ base: 1, sm: 2, md: 3 }}
+                        spacing="xl"
+                    >
+                        {differenceItems.map((item, i) => {
+                            const Icon = diffIcons[i];
+                            return (
+                                <Card
+                                    key={i}
+                                    className={`${styles.caseCard} ${isDiffVisible ? styles.staggered : ""}`}
+                                    style={{
+                                        animationDelay: `${i * 0.1}s`,
+                                        opacity: isDiffVisible ? 1 : 0,
+                                    }}
+                                    padding="xl"
+                                    radius="md"
+                                    withBorder
+                                >
+                                    <ThemeIcon
+                                        size={40}
+                                        radius="md"
+                                        variant="light"
+                                        color="blue"
+                                        mb="md"
+                                    >
+                                        <Icon size={20} />
+                                    </ThemeIcon>
+                                    <Text
+                                        fw={700}
+                                        size="lg"
+                                        mb="xs"
+                                    >
+                                        {item.title}
+                                    </Text>
+                                    <Text
+                                        size="sm"
+                                        c="dimmed"
+                                        lh={1.6}
+                                    >
+                                        {item.description}
+                                    </Text>
+                                </Card>
+                            );
+                        })}
+                    </SimpleGrid>
+                </Container>
+            </section>
             {/* How it works Section */}
             <section className={styles.section}>
                 <Container size="lg">
@@ -599,7 +685,6 @@ const LandingPage = () => {
                     </SimpleGrid>
                 </Container>
             </section>
-
             {/* Use Cases Section */}
             <section className={`${styles.section} ${styles.darkBg}`}>
                 <Container size="lg">
@@ -636,7 +721,6 @@ const LandingPage = () => {
                     </Text>
                 </Container>
             </section>
-
             {/* Who is it for Section */}
             <section className={styles.section}>
                 <Container size="lg">
@@ -672,7 +756,6 @@ const LandingPage = () => {
                     </SimpleGrid>
                 </Container>
             </section>
-
             {/* Closing CTA Section */}
             <section className={styles.finalCta}>
                 <Container size="sm">
