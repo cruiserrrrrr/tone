@@ -6,8 +6,25 @@ import ChatSettings from "./components/ChatSettings";
 import GeneralInstructions from "./components/GeneralInstructions";
 import PaymentPlans from "./components/PaymentPlans";
 import { User, MessageSquare, BookOpen, CreditCard } from "lucide-react";
+import { useRouter } from "next/router";
 
 const Profile = () => {
+    const router = useRouter();
+    const activeTab = typeof router.query.tab === "string" ? router.query.tab : "user-settings";
+
+    const handleTabChange = (value: string | null) => {
+        if (value) {
+            router.push(
+                {
+                    pathname: router.pathname,
+                    query: { ...router.query, tab: value },
+                },
+                undefined,
+                { shallow: true },
+            );
+        }
+    };
+
     return (
         <Container
             size="xl"
@@ -17,7 +34,8 @@ const Profile = () => {
             <Header />
 
             <Tabs
-                defaultValue="user-settings"
+                value={activeTab}
+                onChange={handleTabChange}
                 orientation="vertical"
                 variant="unstyled"
                 classNames={{

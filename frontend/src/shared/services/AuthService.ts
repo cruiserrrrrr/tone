@@ -6,6 +6,10 @@ export interface User {
     name?: string;
     lastname?: string;
     telegramId?: string;
+    planExpiresAt: string | null; // date
+    planId: number | null;
+    planPurchasedAt: string | null;
+    requestsLeft: number;
 }
 
 export interface AuthResponse {

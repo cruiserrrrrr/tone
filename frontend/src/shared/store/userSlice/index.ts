@@ -26,7 +26,7 @@ const initialState: UserState = {
     user: null,
     loading: false,
     error: null,
-    ...loadState(),
+    // ...loadState(),
 };
 
 const userSlice = createSlice({
