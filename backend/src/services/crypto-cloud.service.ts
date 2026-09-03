@@ -1,17 +1,23 @@
-import { Injectable, Logger, BadRequestException } from "@nestjs/common";
+import {
+    Injectable,
+    Logger,
+    BadRequestException,
+    ServiceUnavailableException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, DataSource } from "typeorm";
 import { Payment, PaymentStatus } from "../entities/payment.entity";
 import { User } from "../entities/user.entity";
 import { Plan } from "../entities/plan.entity";
 import * as crypto from "crypto";
+import { getCryptoCloudConfig } from "../config/env";
 
 @Injectable()
 export class CryptoCloudService {
     private readonly logger = new Logger(CryptoCloudService.name);
-    private readonly apiUrl = "https://api.cryptocloud.plus/v2/invoice/create";
-    private readonly apiKey = process.env.CRYPTO_CLOUD_API_KEY;
-    private readonly shopId = process.env.CRYPTO_CLOUD_SHOP_ID;
+    private readonly apiUrl = getCryptoCloudConfig().invoiceUrl;
+    private readonly apiKey = getCryptoCloudConfig().apiKey;
+    private readonly shopId = getCryptoCloudConfig().shopId;
 
     constructor(
         @InjectRepository(Payment)
@@ -29,6 +35,12 @@ export class CryptoCloudService {
         amount: number,
         currency: string = "USD",
     ) {
+        if (!this.apiKey || !this.shopId) {
+            throw new ServiceUnavailableException(
+                "Оплата недоступна: не заданы CRYPTO_CLOUD_API_KEY и CRYPTO_CLOUD_SHOP_ID",
+            );
+        }
+
         const user = await this.userRepository.findOne({
             where: { id: userId },
         });
@@ -189,6 +201,11 @@ export class CryptoCloudService {
         orderId: string,
         token: string,
     ): boolean {
+        // Без ключа подпись проверить нечем — считаем вебхук невалидным.
+        if (!this.apiKey) {
+            return false;
+        }
+
         const checkString = `${invoiceId}${orderId}${this.apiKey}`;
         const hash = crypto.createHash("md5").update(checkString).digest("hex");
         return hash === token;

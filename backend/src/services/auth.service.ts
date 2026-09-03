@@ -11,6 +11,7 @@ import { LoginDto } from "../dto/login.dto";
 import * as bcrypt from "bcrypt";
 import { UserRole } from "../enums/user-role.enum";
 import { User } from "../entities/user.entity";
+import { getAuthConfig } from "../config/env";
 
 @Injectable()
 export class AuthService {
@@ -92,7 +93,9 @@ export class AuthService {
         const payload = { email: user.email, sub: user.id, role: user.role };
         const response: any = {
             access_token: this.jwtService.sign(payload),
-            refresh_token: this.jwtService.sign(payload, { expiresIn: "7d" }),
+            refresh_token: this.jwtService.sign(payload, {
+                expiresIn: getAuthConfig().refreshTokenTtlSeconds,
+            }),
             user: {
                 id: user.id,
                 email: user.email,

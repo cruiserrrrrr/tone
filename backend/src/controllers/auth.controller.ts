@@ -15,6 +15,7 @@ import { AuthService } from "../services/auth.service";
 import { RegisterDto } from "../dto/register.dto";
 import { LoginDto } from "../dto/login.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
+import { getAppConfig, getAuthConfig } from "../config/env";
 
 @Controller("auth")
 export class AuthController {
@@ -94,20 +95,21 @@ export class AuthController {
         accessToken: string,
         refreshToken: string,
     ) {
-        const isProd = process.env.NODE_ENV === "production";
+        const isProd = getAppConfig().isProduction;
+        const authConfig = getAuthConfig();
 
         res.cookie("access_token", accessToken, {
             httpOnly: true,
             secure: isProd,
             sameSite: "strict",
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
+            maxAge: authConfig.accessTokenTtlSeconds * 1000,
         });
 
         res.cookie("refresh_token", refreshToken, {
             httpOnly: true,
             secure: isProd,
             sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            maxAge: authConfig.refreshTokenTtlSeconds * 1000,
         });
     }
 

@@ -1,4 +1,5 @@
 import isClient from "../helpers/isClient";
+import { buildApiUrl, buildRefreshUrl } from "../config";
 
 // Флаг для отслеживания процесса обновления токена
 let isRefreshing = false;
@@ -44,14 +45,7 @@ abstract class ServiceBase {
             credentials: "include",
         };
 
-        const baseUrl = isClient() ? process.env.NEXT_PUBLIC_REQUEST_URL : process.env.REQUEST_URL;
-
-        if (baseUrl) {
-            // Убеждаемся, что между baseUrl и url нет двойного слеша или отсутствующего слеша
-            const normalizedBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
-            const normalizedEndpoint = url.startsWith("/") ? url : `/${url}`;
-            url = `${normalizedBaseUrl}${normalizedEndpoint}`;
-        }
+        url = buildApiUrl(url);
 
         try {
             const response = await fetch(url, config);
@@ -146,14 +140,10 @@ abstract class ServiceBase {
 
         // Начинаем процесс обновления токена
         isRefreshing = true;
-        const baseUrl = isClient() ? process.env.NEXT_PUBLIC_REQUEST_URL : process.env.REQUEST_URL;
-        const normalizedBaseUrl = baseUrl?.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
 
         try {
             // Вызываем refresh для обновления токена напрямую
-            const refreshUrl = normalizedBaseUrl?.includes("/api")
-                ? `${normalizedBaseUrl}/auth/refresh`
-                : `${normalizedBaseUrl}/api/auth/refresh`;
+            const refreshUrl = buildRefreshUrl();
             const refreshConfig: RequestInit = {
                 method: "GET",
                 credentials: "include",

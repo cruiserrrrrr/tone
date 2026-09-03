@@ -13,6 +13,7 @@ import { AiModule } from "./modules/ai.module";
 import { ChatSettingsModule } from "./modules/chat-settings.module";
 import { PlansModule } from "./modules/plans.module";
 import { CryptoCloudModule } from "./modules/crypto-cloud.module";
+import { getDatabaseConfig, getMailConfig } from "./config/env";
 
 @Module({
     imports: [
@@ -29,19 +30,19 @@ import { CryptoCloudModule } from "./modules/crypto-cloud.module";
         CryptoCloudModule,
         MailerModule.forRoot({
             transport: {
-                host: process.env.SMTP_HOST,
-                port: parseInt(process.env.SMTP_PORT),
-                secure: process.env.SMTP_SECURE === "true",
+                host: getMailConfig().host,
+                port: getMailConfig().port,
+                secure: getMailConfig().secure,
                 auth: {
-                    user: process.env.SMTP_USER,
-                    pass: process.env.SMTP_PASS,
+                    user: getMailConfig().user,
+                    pass: getMailConfig().pass,
                 },
                 tls: {
-                    rejectUnauthorized: false,
+                    rejectUnauthorized: getMailConfig().rejectUnauthorized,
                 },
             },
             defaults: {
-                from: process.env.FROM_EMAIL,
+                from: getMailConfig().from,
             },
             template: {
                 dir: join(__dirname, "templates"),
@@ -53,14 +54,7 @@ import { CryptoCloudModule } from "./modules/crypto-cloud.module";
         }),
         TypeOrmModule.forRoot({
             type: "postgres",
-            host:
-                process.env.NODE_ENV == "dev"
-                    ? "127.0.0.1"
-                    : process.env.DATABASE_HOST,
-            port: parseInt(process.env.DATABASE_PORT) || 6543,
-            username: process.env.DATABASE_USERNAME || "tone",
-            password: process.env.DATABASE_PASSWORD || "tone_secret_pwd",
-            database: process.env.DATABASE_NAME || "tone_postgres",
+            ...getDatabaseConfig(),
             autoLoadEntities: true,
             synchronize: false,
         }),

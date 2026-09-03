@@ -1,4 +1,6 @@
-const API_URL = "http://localhost:3001/api";
+importScripts("config.js");
+
+const API_URL = self.TONE_CONFIG.API_URL;
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "saveToken") {

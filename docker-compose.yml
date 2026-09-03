@@ -4,11 +4,11 @@ services:
     container_name: tone-db
     restart: always
     environment:
-      POSTGRES_USER: tone
-      POSTGRES_PASSWORD: tone_secret_pwd
-      POSTGRES_DB: tone_postgres
+      POSTGRES_USER: ${POSTGRES_USER:-tone}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD не задан, см. .env.example}
+      POSTGRES_DB: ${POSTGRES_DB:-tone_postgres}
     ports:
-      - "6543:5432"
+      - "${POSTGRES_PORT:-6543}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -17,18 +17,18 @@ services:
     container_name: tone-pgadmin
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:?PGADMIN_EMAIL не задан, см. .env.example}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:?PGADMIN_PASSWORD не задан, см. .env.example}
     ports:
-      - "8080:80"
+      - "${PGADMIN_PORT:-8080}:80"
 
   mailpit:
     image: axllent/mailpit
     container_name: tone-mailpit
     restart: always
     ports:
-      - "1026:1025"
-      - "8026:8025"
+      - "${MAILPIT_SMTP_PORT:-1026}:1025"
+      - "${MAILPIT_UI_PORT:-8026}:8025"
 
 volumes:
   postgres_data:

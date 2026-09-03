@@ -6,13 +6,19 @@ import {
 } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { getUrlReplacementConfig } from "../config/env";
 
 @Injectable()
 export class UrlReplacementInterceptor implements NestInterceptor {
-    private readonly sourceUrl = "s3.regru.cloud";
-    private readonly targetUrl = "cdn.unitbox.ai";
+    private readonly sourceUrl = getUrlReplacementConfig().sourceUrl;
+    private readonly targetUrl = getUrlReplacementConfig().targetUrl;
 
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+        // Подмена не настроена — пропускаем ответ без изменений.
+        if (!this.sourceUrl || !this.targetUrl) {
+            return next.handle();
+        }
+
         return next.handle().pipe(
             map((data) => {
                 return this.replaceUrls(data);
